@@ -6,13 +6,25 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar arquivos de dependencias
+# Copiar arquivos de dependencias e configuracao do Quasar
+# (quasar prepare precisa desses arquivos no postinstall)
 COPY package*.json ./
+COPY quasar.config.ts ./
+COPY quasar.extensions.json ./
+COPY tsconfig.json ./
+COPY index.html ./
 
-# Instalar dependencias
+# Criar estrutura minima para quasar prepare
+RUN mkdir -p src/css src/boot src/router src/layouts src/pages src/components
+COPY src/css ./src/css
+COPY src/boot ./src/boot
+COPY src/router ./src/router
+COPY src/env.d.ts ./src/
+
+# Instalar dependencias (quasar prepare roda no postinstall)
 RUN npm ci
 
-# Copiar codigo fonte
+# Copiar restante do codigo fonte
 COPY . .
 
 # Argumento para URL da API (pode ser sobrescrito no build)
