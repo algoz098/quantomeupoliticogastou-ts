@@ -289,7 +289,10 @@ async function loadData() {
       filtersStore.setAnosDisponiveis(statsData.anos_disponiveis);
       // Usar o ano mais recente disponivel se o ano atual nao tiver dados
       const anosOrdenados = [...statsData.anos_disponiveis].sort((a, b) => b - a);
-      anoAtual.value = anosOrdenados.includes(ANO_ATUAL) ? ANO_ATUAL : anosOrdenados[0];
+      const primeiroAno = anosOrdenados[0];
+      if (primeiroAno !== undefined) {
+        anoAtual.value = anosOrdenados.includes(ANO_ATUAL) ? ANO_ATUAL : primeiroAno;
+      }
     }
 
     // Buscar ranking e categorias com o ano correto

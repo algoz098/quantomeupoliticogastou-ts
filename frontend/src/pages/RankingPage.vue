@@ -251,7 +251,10 @@ function getAnoInicial(): number {
   const anosDoStore = filtersStore.anosDisponiveis.value;
   if (anosDoStore.length > 0) {
     const anosOrdenados = [...anosDoStore].sort((a, b) => b - a);
-    return anosOrdenados.includes(ANO_ATUAL) ? ANO_ATUAL : anosOrdenados[0];
+    const primeiroAno = anosOrdenados[0];
+    if (primeiroAno !== undefined) {
+      return anosOrdenados.includes(ANO_ATUAL) ? ANO_ATUAL : primeiroAno;
+    }
   }
   return ANO_ATUAL;
 }
