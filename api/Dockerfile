@@ -51,6 +51,9 @@ RUN chmod +x ./entrypoint.sh
 # Criar diretorios necessarios
 RUN mkdir -p /app/data /app/database && chown -R nodejs:nodejs /app/data /app/database
 
+# Copiar schema do banco (embutido no container)
+COPY --chown=nodejs:nodejs schema.sql /app/database/schema.sql
+
 # Mudar para usuario nao-root
 USER nodejs
 
