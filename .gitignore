@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+build/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos grandes (excedem limite do GitHub de 100MB)
+samples/Ano-2024.json
+api/data/politicos.db
+
+# Dados locais
+*.db
+*.sqlite
+*.sqlite3
+
