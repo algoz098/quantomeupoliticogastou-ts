@@ -34,16 +34,35 @@ export function closeDatabase(): void {
 
 export function initializeDatabase(): void {
   const database = getDatabase();
-  
-  // Ler e executar o schema
-  const schemaPath = path.join(__dirname, '../../../database/schema.sql');
-  
-  if (fs.existsSync(schemaPath)) {
+
+  // Possiveis locais do schema.sql
+  const possiblePaths = [
+    // Docker: montado em /app/database
+    '/app/database/schema.sql',
+    // Docker: variavel de ambiente customizada
+    process.env.SCHEMA_PATH,
+    // Desenvolvimento: relativo ao codigo fonte
+    path.join(__dirname, '../../../database/schema.sql'),
+    // Desenvolvimento: relativo ao dist
+    path.join(__dirname, '../../database/schema.sql'),
+    // Raiz do projeto
+    path.join(process.cwd(), 'database/schema.sql'),
+  ].filter(Boolean) as string[];
+
+  let schemaPath: string | null = null;
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      schemaPath = p;
+      break;
+    }
+  }
+
+  if (schemaPath) {
     const schema = fs.readFileSync(schemaPath, 'utf-8');
     database.exec(schema);
-    logger.info('Schema do banco de dados inicializado');
+    logger.info('Schema do banco de dados inicializado', { path: schemaPath });
   } else {
-    logger.warn('Arquivo schema.sql nao encontrado em:', { path: schemaPath });
+    logger.warn('Arquivo schema.sql nao encontrado. Locais verificados:', { paths: possiblePaths });
   }
 }
 
